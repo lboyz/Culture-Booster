@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Mood Booster - Lanjut Lirik Lagu</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .game-area {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      @media (max-width: 768px) {
+        .game-area {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .music-player,
+      .soundboard {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        padding-bottom: 10px;
+      }
+
+      .song-info {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .song-title {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+      }
+
+      .song-artist {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+
+      .lyrics-container {
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 1.2rem;
+        line-height: 1.5;
+      }
+
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      button {
+        background-color: #ff4081;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      button:hover {
+        background-color: #e91e63;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .stop-btn {
+        background-color: #f44336;
+      }
+
+      .stop-btn:hover {
+        background-color: #d32f2f;
+      }
+
+      .soundboard-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+
+      .sound-btn {
+        background-color: #4caf50;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .sound-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .sound-btn:active {
+        transform: translateY(0);
+      }
+
+      .sound-btn.laugh {
+        background-color: #ff9800;
+      }
+
+      .sound-btn.correct {
+        background-color: #4caf50;
+      }
+
+      .sound-btn.wrong {
+        background-color: #f44336;
+      }
+
+      .sound-btn.clap {
+        background-color: #2196f3;
+      }
+
+      .sound-icon {
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+
+      .sound-label {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      .progress-container {
+        width: 100%;
+        height: 8px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        margin: 20px 0;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background-color: #ff4081;
+        width: 0%;
+        transition: width 0.1s linear;
+      }
+
+      .song-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .song-item {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+      }
+
+      .song-item:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+      }
+
+      .song-item.active {
+        background-color: rgba(255, 64, 129, 0.3);
+        border: 2px solid #ff4081;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 30px;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Game Mood Booster</h1>
+        <p class="subtitle">
+          Lanjut Lirik Lagu - Tebak Lirik dan Nikmati Musik!
+        </p>
+      </header>
+
+      <div class="game-area">
+        <div class="music-player">
+          <h2 class="section-title">Pemutar Musik</h2>
+
+          <div class="song-info">
+            <div class="song-title" id="current-song-title">
+              Pilih Lagu untuk Memulai
+            </div>
+            <div class="song-artist" id="current-song-artist">-</div>
+          </div>
+
+          <div class="lyrics-container" id="lyrics-display">
+            Pilih lagu untuk melihat lirik dan melanjutkannya
+          </div>
+
+          <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+
+          <div class="controls">
+            <button id="play-btn">Putar</button>
+            <button id="stop-btn" class="stop-btn">Berhenti</button>
+            <button id="next-btn">Lagu Selanjutnya</button>
+          </div>
+
+          <div style="text-align: center; margin-top: 20px">
+            <label for="seek-input">Lompat ke detik:</label>
+            <input
+              type="number"
+              id="seek-input"
+              placeholder="Masukkan detik..."
+              min="0"
+            />
+            <button id="seek-btn" type="button">Lompat</button>
+          </div>
+
+          <h3 class="section-title" style="margin-top: 30px">Daftar Lagu</h3>
+          <div class="song-list" id="song-list"></div>
+        </div>
+
+        <div class="soundboard">
+          <h2 class="section-title">Soundboard</h2>
+          <div class="soundboard-buttons">
+            <div class="sound-btn laugh" data-sound="laugh">
+              <div class="sound-icon">😂</div>
+              <div class="sound-label">Ketawa</div>
+            </div>
+            <div class="sound-btn correct" data-sound="correct">
+              <div class="sound-icon">✅</div>
+              <div class="sound-label">Benar</div>
+            </div>
+            <div class="sound-btn wrong" data-sound="wrong">
+              <div class="sound-icon">❌</div>
+              <div class="sound-label">Salah</div>
+            </div>
+            <div class="sound-btn clap" data-sound="clap">
+              <div class="sound-icon">👏</div>
+              <div class="sound-label">Tepuk Tangan</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>Game Mood Booster - Lanjut Lirik Lagu © 2023</p>
+      </footer>
+    </div>
+
+    <!-- Audio elements untuk soundboard -->
+    <audio id="sound-laugh" src="ketawa1.mp3"></audio>
+    <audio id="sound-correct" src="benar1.mp3"></audio>
+    <audio id="sound-wrong" src="salah.mp3"></audio>
+    <audio id="sound-clap" src="aplous.mp3"></audio>
+
+    <script>
+      // Data lagu (30 lagu)
+      const songs = [
+        {
+          id: 1,
+          startTime: 37,
+          title: "Lagu 1",
+          artist: "Artis 1",
+          lyrics: "Detik 37",
+          audioUrl: "lagu/Seandainya.mp3",
+        },
+        {
+          id: 2,
+          startTime: 76,
+          title: "Lagu 2",
+          artist: "Artis 2",
+          lyrics: "Detik 76",
+          audioUrl: "lagu/Cari Pacar Lagi.mp3",
+        },
+        {
+          id: 3,
+          startTime: 45,
+          title: "Lagu 3",
+          artist: "Artis 3",
+          lyrics: "Detik 45",
+          audioUrl: "lagu/Kamu.mp3",
+        },
+        {
+          id: 4,
+          startTime: 32,
+          title: "Lagu 4",
+          artist: "Artis 4",
+          lyrics: "Detik 32",
+          audioUrl: "lagu/Apa Kabar Sayang.mp3",
+        },
+        {
+          id: 5,
+          startTime: 45,
+          title: "Lagu 5",
+          artist: "Artis 5",
+          lyrics: "Detik 45",
+          audioUrl: "lagu/Pergi Pagi Pulang Pagi.mp3",
+        },
+        {
+          id: 6,
+          startTime: 90,
+          title: "Lagu 6",
+          artist: "Artis 6",
+          lyrics: "Detik 90",
+          audioUrl: "lagu/Separuh Aku.mp3",
+        },
+        {
+          id: 7,
+          startTime: 129,
+          title: "Lagu 7",
+          artist: "Artis 7",
+          lyrics: "Detik 129",
+          audioUrl: "lagu/Demi Cinta.mp3",
+        },
+        {
+          id: 8,
+          startTime: 30,
+          title: "Lagu 8",
+          artist: "Artis 8",
+          lyrics: "Detik 30",
+          audioUrl: "lagu/Separuh Nafas.mp3",
+        },
+        {
+          id: 9,
+          startTime: 45,
+          title: "Lagu 9",
+          artist: "Artis 9",
+          lyrics: "Detik 45",
+          audioUrl: "lagu/Tanpa Cinta.mp3",
+        },
+        {
+          id: 10,
+          startTime: 50,
+          title: "Lagu 10",
+          artist: "Artis 10",
+          lyrics: "Detik 50",
+          audioUrl: "lagu/Jantung Hati.mp3",
+        },
+        {
+          id: 11,
+          startTime: 36,
+          title: "Lagu 11",
+          artist: "Artis 11",
+          lyrics: "Detik 36",
+          audioUrl: "lagu/Panah Asmara.mp3",
+        },
+        {
+          id: 12,
+          startTime: 53,
+          title: "Lagu 12",
+          artist: "Artis 12",
+          lyrics: "Detik 53",
+          audioUrl: "lagu/Lebih Dari Bintang.mp3",
+        },
+        {
+          id: 13,
+          startTime: 78,
+          title: "Lagu 13",
+          artist: "Artis 13",
+          lyrics: "Detik 78",
+          audioUrl: "lagu/Bila Kau Tak Disampingku.mp3",
+        },
+        {
+          id: 14,
+          startTime: 37,
+          title: "Lagu 14",
+          artist: "Artis 14",
+          lyrics: "Detik 37",
+          audioUrl: "lagu/Dia Milikku.mp3",
+        },
+        {
+          id: 15,
+          startTime: 52,
+          title: "Lagu 15",
+          artist: "Artis 15",
+          lyrics: "Detik 52",
+          audioUrl: "lagu/Hari Bersamanya.mp3",
+        },
+        {
+          id: 16,
+          startTime: 44,
+          title: "Lagu 16",
+          artist: "Artis 16",
+          lyrics: "Detik 44",
+          audioUrl: "lagu/Akulah Dia.mp3",
+        },
+        {
+          id: 17,
+          startTime: 36,
+          title: "Lagu 17",
+          artist: "Artis 17",
+          lyrics: "Detik 36",
+          audioUrl: "lagu/Mabuk Cinta.mp3",
+        },
+        {
+          id: 18,
+          startTime: 47,
+          title: "Lagu 18",
+          artist: "Artis 18",
+          lyrics: "Detik 47",
+          audioUrl: "lagu/Kasih Putih.mp3",
+        },
+        {
+          id: 19,
+          startTime: 31,
+          title: "Lagu 19",
+          artist: "Artis 19",
+          lyrics: "Detik 31",
+          audioUrl: "lagu/Ruang Rindu.mp3",
+        },
+        {
+          id: 20,
+          startTime: 56,
+          title: "Lagu 20",
+          artist: "Artis 20",
+          lyrics: "Detik 56",
+          audioUrl: "lagu/Empat Mata.mp3",
+        },
+        {
+          id: 21,
+          startTime: 49,
+          title: "Lagu 21",
+          artist: "Artis 21",
+          lyrics: "Detik 49",
+          audioUrl: "lagu/Manusia Biasa.mp3",
+        },
+        {
+          id: 22,
+          startTime: 42,
+          title: "Lagu 22",
+          artist: "Artis 22",
+          lyrics: "Detik 42",
+          audioUrl: "lagu/Hujan.mp3",
+        },
+        {
+          id: 23,
+          startTime: 48,
+          title: "Lagu 23",
+          artist: "Artis 23",
+          lyrics: "Detik 48",
+          audioUrl: "lagu/Semakin Jauh.mp3",
+        },
+        {
+          id: 24,
+          startTime: 45,
+          title: "Lagu 24",
+          artist: "Artis 24",
+          lyrics: "Detik 45",
+          audioUrl: "lagu/Lebih Indah.mp3",
+        },
+        {
+          id: 25,
+          startTime: 53,
+          title: "Lagu 25",
+          artist: "Artis 25",
+          lyrics: "Detik 53",
+          audioUrl: "lagu/Hanya Kamu Yang Bisa.mp3",
+        },
+        {
+          id: 26,
+          startTime: 55,
+          title: "Lagu 26",
+          artist: "Artis 26",
+          lyrics: "Detik 55",
+          audioUrl: "lagu/Sepenuh Hati.mp3",
+        },
+        {
+          id: 27,
+          startTime: 80,
+          title: "Lagu 27",
+          artist: "Artis 27",
+          lyrics: "Detik 80",
+          audioUrl: "lagu/Bukan Untukku.mp3",
+        },
+        {
+          id: 28,
+          startTime: 81,
+          title: "Lagu 28",
+          artist: "Artis 28",
+          lyrics: "Detik 81",
+          audioUrl: "lagu/Mengenangmu.mp3",
+        },
+        {
+          id: 29,
+          startTime: 50,
+          title: "Lagu 29",
+          artist: "Artis 29",
+          lyrics: "Detik 50",
+          audioUrl: "lagu/Jadi Yang Kuinginkan.mp3",
+        },
+        {
+          id: 30,
+          startTime: 31,
+          title: "Lagu 30",
+          artist: "Artis 30",
+          lyrics: "Detik 31",
+          audioUrl: "lagu/Soulmate.mp3",
+        },
+      ];
+
+      // ======== ELEMENT DOM ========
+      const songListElement = document.getElementById("song-list");
+      const currentSongTitle = document.getElementById("current-song-title");
+      const currentSongArtist = document.getElementById("current-song-artist");
+      const lyricsDisplay = document.getElementById("lyrics-display");
+      const playBtn = document.getElementById("play-btn");
+      const stopBtn = document.getElementById("stop-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const seekBtn = document.getElementById("seek-btn");
+      const seekInput = document.getElementById("seek-input");
+      const progressBar = document.getElementById("progress-bar");
+      const soundButtons = document.querySelectorAll(".sound-btn");
+
+      let currentSongIndex = 0;
+      let isPlaying = false;
+      let audio = new Audio();
+
+      // ======== FUNGSI ========
+      function initializeSongList() {
+        songListElement.innerHTML = "";
+        songs.forEach((song, index) => {
+          const item = document.createElement("div");
+          item.className = "song-item";
+          if (index === currentSongIndex) item.classList.add("active");
+          item.innerHTML = `<div>${song.title}</div><div style="font-size:0.8rem;opacity:0.8;">${song.artist}</div>`;
+          item.addEventListener("click", () => selectSong(index));
+          songListElement.appendChild(item);
+        });
+      }
+
+      function selectSong(index) {
+        currentSongIndex = index;
+        updateActiveSong();
+        loadSong(songs[currentSongIndex]);
+        stopAudio();
+      }
+
+      function updateActiveSong() {
+        document.querySelectorAll(".song-item").forEach((item, i) => {
+          item.classList.toggle("active", i === currentSongIndex);
+        });
+      }
+
+      function loadSong(song) {
+        currentSongTitle.textContent = song.title;
+        currentSongArtist.textContent = song.artist;
+        lyricsDisplay.textContent = song.lyrics;
+        audio.src = song.audioUrl;
+        progressBar.style.width = "0%";
+        audio.onloadedmetadata = () => {
+          audio.currentTime = song.startTime || 0;
+          audio.play();
+        };
+      }
+
+      function playAudio() {
+        if (audio.src) {
+          audio.play();
+          isPlaying = true;
+          playBtn.textContent = "Jeda";
+          updateProgressBar();
+        }
+      }
+
+      function stopAudio() {
+        audio.pause();
+        audio.currentTime = 0;
+        isPlaying = false;
+        playBtn.textContent = "Putar";
+        progressBar.style.width = "0%";
+      }
+
+      function togglePlayPause() {
+        if (isPlaying) {
+          audio.pause();
+          isPlaying = false;
+          playBtn.textContent = "Putar";
+        } else {
+          playAudio();
+        }
+      }
+
+      function nextSong() {
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        updateActiveSong();
+        loadSong(songs[currentSongIndex]);
+        playAudio();
+      }
+
+      function updateProgressBar() {
+        if (isPlaying && audio.duration > 0) {
+          const progress = (audio.currentTime / audio.duration) * 100;
+          progressBar.style.width = `${progress}%`;
+          if (audio.currentTime < audio.duration) {
+            requestAnimationFrame(updateProgressBar);
+          } else {
+            nextSong();
+          }
+        }
+      }
+
+      // ======== FUNGSI LOMPAT ========
+      function seekToSecond() {
+        const seconds = parseFloat(seekInput.value);
+        if (!isNaN(seconds) && seconds >= 0 && audio.duration > seconds) {
+          audio.currentTime = seconds;
+          if (!isPlaying) playAudio();
+        } else {
+          alert(
+            "Masukkan detik yang valid (0 - " + Math.floor(audio.duration) + ")"
+          );
+        }
+      }
+
+      // ======== SOUND EFFECT ========
+      function playSound(type) {
+        const sound = document.getElementById(`sound-${type}`);
+        if (sound) {
+          sound.currentTime = 0;
+          sound.play();
+        }
+      }
+
+      // ======== EVENT LISTENERS ========
+      playBtn.addEventListener("click", togglePlayPause);
+      stopBtn.addEventListener("click", stopAudio);
+      nextBtn.addEventListener("click", nextSong);
+      seekBtn.addEventListener("click", seekToSecond);
+      soundButtons.forEach((btn) =>
+        btn.addEventListener("click", () => playSound(btn.dataset.sound))
+      );
+
+      // ======== INISIALISASI ========
+      initializeSongList();
+      loadSong(songs[currentSongIndex]);
+    </script>
+  </body>
+</html>
